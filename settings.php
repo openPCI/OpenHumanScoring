@@ -1,0 +1,4 @@
+<?php
+$settings=(object) array(
+
+);
