@@ -1,4 +1,4 @@
-#rescore
+# Rescore
 
 This is a simple tool for rescoring exported result data from
 TAO using functional scoring on the interaction types that support it in this collection.
