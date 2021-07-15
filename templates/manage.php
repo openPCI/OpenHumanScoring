@@ -1,5 +1,5 @@
 <?php
 // session_start();
-if(!$_SESSION["userid"]) exit;
-else $user_id=$_SESSION["userid"];
+if(!$_SESSION["user_id"]) exit;
+else $user_id=$_SESSION["user_id"];
 
