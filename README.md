@@ -1,9 +1,17 @@
 # OpenCoding
-Human coding of test taker responses to PCI and QTI items. Work-in-progress.
+Human coding of test taker responses to PCI and QTI items. Still work-in-progress. But does the basic tasks of importing responses, managing coders, traing, coding, flagging and handling flags, double coding etc.
 
-Take a look at the flowchart describing suggested workflow.
-
-Challenge: View items as in TAO-application.
+Integrates PCI's in the coding application.
 
 ## Howto
-For the time being, the recode scripts work as a javascript application. Download recode and place it in the same folder as the OpenPCIs (in order to code the 3D and Room PCIs). Run recode in your browser (locally or online).
+Create a database OpenCoding. Import the tables from opencoding.sql (using phpmyadmin).
+
+Manually create a user (using phpmyadmin) and give it scoringadmin and projectadmin permissions.
+
+Manually create a project (using phpmyadmin).
+
+Import data from csv-files. 
+
+Manage the project. Invite coders, train them. Manage their work. 
+
+Don't hessitate to reach out to jebu@edu.au.dk for help.
