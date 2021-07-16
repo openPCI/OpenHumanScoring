@@ -1,11 +1,11 @@
 <?php
 session_start();
-#checkpermissions()
-// if(!$_SESSION["user_id"]) exit;
-// else $user_id=$_SESSION["user_id"];
+
 $relative="../";
 include_once($relative."dirs.php");
 include_once($shareddir."database.php");
+checkperm();
+
 if($_SESSION["response_id"]!=$_POST["response_id"]) $warning=_("Response-id doesn't match.");
 else {
 	switch($_POST["actiontype"]) {

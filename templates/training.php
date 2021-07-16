@@ -1,10 +1,7 @@
 <?php
 session_start();
-if(!$_SESSION["user_id"]) {
-	echo json_encode(array("getlogin"=>true));
-	exit;
-} else $user_id=$_SESSION["user_id"];
 include_once($shareddir."database.php");
+checkperm("projectadmin");
 
 $q="SELECT distinct ta.task_id,task_name,test_name,ta.test_id,count(tr.response_id) as trainingresponseno,min(tr.difficulty) as first_id, group_concat(tr.response_id separator ',') as response_ids FROM `trainingresponses` tr left join responses r on tr.response_id=r.response_id LEFT join tasks ta on ta.task_id=r.task_id left join tests t on t.test_id=ta.test_id WHERE project_id=".$_SESSION["project_id"]." group by ta.task_id order by test_name, task_name";
 $result=$mysqli->query($q);

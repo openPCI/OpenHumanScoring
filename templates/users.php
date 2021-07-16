@@ -2,7 +2,7 @@
 	$relative="../";
 	include_once($functionsdir."database.php");
 	
-	if($_SESSION["user_id"]!=1) exit;
+checkperm("projectadmin");
 	global $res;
 	$res["org_id"]=$_POST["org_id"];
 	$q='select u.user_id,u.username,u.email,group_concat(p.unittype separator ", ") as permissions from users u left join user_permissions p on u.user_id=p.user_id and unit_id='.$_SESSION["project_id"].' where 1 group by 1 order by username ';//org_id=".($_POST["org_id"]?$_POST["org_id"]:$_SESSION["user_id"]);

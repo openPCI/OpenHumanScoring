@@ -1,10 +1,7 @@
 <?php
 session_start();
-if(!$_SESSION["user_id"]) {
-	echo json_encode(array("getlogin"=>true));
-	exit;
-} else $user_id=$_SESSION["user_id"];
 include_once($shareddir."database.php");
+checkperm();
 
 $q="select doublecodingpct from projects where project_id=".$_SESSION["project_id"];
 $result=$mysqli->query($q);
@@ -23,7 +20,7 @@ $_SESSION["doublecodingpct"][$r["task_id"]]=$reviseddoublecodedpct;
 
 $q='(select test_name as name, a.test_id as unit_id, t.test_id, 0 as coded, 0 as flagged,0 as maxcodedresponse_id,1 as coltype  from assign_test a left join tests t on t.test_id=a.test_id where coder_id='.$_SESSION["user_id"].')
 UNION 
-(select task_name,tt.task_id,tt.test_id,sum(if(c.coder_id='.$_SESSION["user_id"].',1,0)),sum(if(f.coder_id='.$_SESSION["user_id"].',1,0)),max(c.response_id),2 as coltype from tasks tt left JOIN responses r on r.task_id=tt.task_id left join coded c on c.response_id=r.response_id left join flags f on f.response_id=c.response_id and f.coder_id=c.coder_id where tt.task_id in (select task_id from assign_task where coder_id='.$_SESSION["user_id"].' UNION select task_id from assign_test a1 left join tasks t1 on a1.test_id=t1.test_id where coder_id='.$_SESSION["user_id"].') group by 1 order by task_name)
+(select task_name,tt.task_id,tt.test_id,sum(if(c.coder_id='.$_SESSION["user_id"].',1,0)),sum(if(f.coder_id='.$_SESSION["user_id"].',1,0)),max(c.response_id),2 as coltype from tasks tt left JOIN responses r on r.task_id=tt.task_id left join coded c on c.response_id=r.response_id left join flags f on f.response_id=c.response_id and f.coder_id=c.coder_id where tt.group_id=0 and tt.task_id in (select task_id from assign_task where coder_id='.$_SESSION["user_id"].' UNION select task_id from assign_test a1 left join tasks t1 on a1.test_id=t1.test_id where coder_id='.$_SESSION["user_id"].') group by 1 order by task_name)
 order by test_id,coltype';
 // echo $q;
 $result=$mysqli->query($q);

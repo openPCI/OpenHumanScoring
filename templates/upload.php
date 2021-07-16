@@ -5,8 +5,7 @@ ini_set("max_input_vars",$newmax_input_vars);
 $max_input_vars=ini_get("max_input_vars");
 if($newmax_input_vars!=$max_input_vars) echo ('<div class="alert alert-danger" role="alert">'.sprintf(_("Your server limits the number of cases to be uploaded to %d. You can change that in the php-ini-file on the server. Or keep the number of cases down in each upload."),$max_input_vars).'</div>');
 
-if(!$_SESSION["user_id"]) exit;
-else $user_id=$_SESSION["user_id"];
+checkperm("projectadmin");
 ?>
 <form>
 	<div class="form-group">

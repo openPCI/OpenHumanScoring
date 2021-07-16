@@ -2,8 +2,7 @@
 // $relative="../";
 // include($relative."dirs.php");
 $res=array("log"=>"test");
-if(!$_SESSION["user_id"]) exit;
-else $user_id=$_SESSION["user_id"];
+checkperm("projectadmin");
 
 ?>
 <div class="list-group list-group-flush">

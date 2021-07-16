@@ -1,13 +1,12 @@
 <?php
 
-if(!$_SESSION["user_id"]) exit;
-else $user_id=$_SESSION["user_id"];
+checkperm("codingadmin");
 include_once($shareddir."database.php");
 $l = localeconv();
 
 $q="(select test_name as name,t.test_id,t.test_id as unit_id,count(task_id) as unitcount,'' as coded,'' as doublecoded, '' as flagged, '' as resolved,'' as first_id,1 as coltype from tests t left join tasks tt on t.test_id=tt.test_id where project_id=".$_SESSION["project_id"]." GROUP by 1 order by test_name) 
 union 
-(select task_name as name,t.test_id,t.task_id,count(r.response_id) as rcount,count(DISTINCT c.response_id) as ccount, count(c.response_id)-count(DISTINCT c.response_id) as dcount, sum(if(f.flagstatus='flagged',1,0)),sum(if(f.flagstatus='resolved',1,0)), min(f.flag_id),2 from tasks t left join tests tt on t.test_id=tt.test_id left join responses r on r.task_id=t.task_id left join coded c on c.response_id=r.response_id left join flags f on f.response_id=r.response_id where tt.project_id=".$_SESSION["project_id"]." GROUP BY 1 order by task_name)
+(select task_name as name,t.test_id,t.task_id,count(r.response_id) as rcount,count(DISTINCT c.response_id) as ccount, count(c.response_id)-count(DISTINCT c.response_id) as dcount, sum(if(f.flagstatus='flagged',1,0)),sum(if(f.flagstatus='resolved',1,0)), min(f.flag_id),2 from tasks t left join tests tt on t.test_id=tt.test_id left join responses r on r.task_id=t.task_id left join coded c on c.response_id=r.response_id left join flags f on f.response_id=r.response_id where t.group_id=0 and tt.project_id=".$_SESSION["project_id"]." GROUP BY 1 order by task_name)
 order by test_id,coltype";
 
 $result=$mysqli->query($q);
@@ -22,16 +21,16 @@ $qarr["test"]=$qstart.' a.`test_id` as `unit_id` from `assign_test` a left join 
 $qarr["task"]=$qstart.' a.`task_id` as `unit_id` from `assign_task` a left join tasks tt on tt.task_id=a.task_id left join tests t on tt.test_id=t.test_id left join users u on a.coder_id=u.user_id where project_id='.$_SESSION["project_id"].' group by unit_id';
 
 $coderbadges=array();
+	$coders=array();
 foreach($qarr as $unittype=>$q) {
-// echo $q;
 	$result=$mysqli->query($q);
 	$allcoders=$result->fetch_all(MYSQLI_ASSOC);
-	$coders=array();
 	foreach($allcoders as $c) {
 		$coders[$unittype][$c["unit_id"]]=$c["coders"];
 		$coderbadges=array_unique(array_merge($coderbadges,explode(" ; ",$c["coderbadges"])));
 	}
 }
+// print_r($coders);
 $coderbadges=implode(" ",$coderbadges);
 ?>
     <div >
@@ -78,10 +77,12 @@ $coderbadges=implode(" ",$coderbadges);
 								}
 							},$doublecodes,$codes);
 						}
-						$agreement=array_merge(...$agreement);
-						$agree=array_sum($agreement);
-						$total=count($agreement);
-						echo ($total?$agree." of ".$total." (".($agree/$total*100)."%)":"0");
+						if($agreement) {
+							$agreement=array_merge(...$agreement);
+							$agree=array_sum($agreement);
+							$total=count($agreement);
+							echo ($total?$agree." of ".$total." (".($agree/$total*100)."%)":"0");
+						} else echo 0;
 					}
 					?></td>
 					<td class="text-right"><?= ($r["coltype"]==2?'<a href="#" class="codeTask" data-first_id="'. $r["first_id"].'" data-task_id="'. $r["unit_id"].'">'. $r["flagged"].'</a>':"");?></td>

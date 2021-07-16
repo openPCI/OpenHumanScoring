@@ -1,10 +1,9 @@
 <?php
-#checkpermissions()
-// if(!$_SESSION["user_id"]) exit;
-// else $user_id=$_SESSION["user_id"];
 $relative="../";
 include_once($relative."dirs.php");
 include_once($shareddir."database.php");
+checkperm("projectadmin");
+
 $responses=$_POST["responses"];
 $cols=array_shift($responses);
 

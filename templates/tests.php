@@ -1,7 +1,6 @@
 <?php
 
-if(!$_SESSION["user_id"]) exit;
-else $user_id=$_SESSION["user_id"];
+checkperm("projectadmin");
 include_once($shareddir."database.php");
 
 $q="select * from tests where project_id=".$_SESSION["project_id"];
@@ -34,13 +33,11 @@ while($r=$result->fetch_assoc()) {
 				<th scope="col"><?= _("Items");?></th>
 				<th scope="col"><?= _("Coding rubrics");?></th>
 				<th scope="col"><?= _("Count");?></th>
-				<th scope="col"><?= _("Coded");?></th>
-				<th scope="col"><?= _("Double coded");?></th>
 				</tr>
 			</thead>
 			<tbody id="tasklist">
 		<?php
-			$q="select t.*,count(r.response_id) as rcount,count(DISTINCT c.response_id) as ccount, count(c.response_id)-count(DISTINCT c.response_id) as dcount,tasktype_name,i.variables from tasks t left join tasktypes i on i.tasktype_id=t.tasktype_id left join responses r on r.task_id=t.task_id left join coded c on c.response_id=r.response_id where test_id=".$r["test_id"]." GROUP BY 1 order by `group_id`";
+			$q="select t.*,count(r.response_id) as rcount,tasktype_name,i.variables from tasks t left join tasktypes i on i.tasktype_id=t.tasktype_id left join responses r on r.task_id=t.task_id where test_id=".$r["test_id"]." GROUP BY 1 order by `group_id`";
 			
 ////////////////
 // 		Due to this bug: https://bugs.mysql.com/bug.php?id=103225
@@ -81,8 +78,6 @@ while($r=$result->fetch_assoc()) {
 				?><div class="additem"><i class="fas fa-plus"></i></div></td>
 				<td class="editable" data-edittype="coding_rubrics" contenteditable><?= $r1["coding_rubrics"];?></td>
 				<td><?= $r1["rcount"];?></td>
-				<td><?= $r1["ccount"];?></td>
-				<td><?= $r1["dcount"];?></td>
 				</tr>
 			
 			<?php

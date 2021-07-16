@@ -58,10 +58,14 @@ function get_template(template,data,f) {
 	$.ajax({url:"shared/templates.php",data:data,type:"POST",dataType:"json",cache:false,
 		success:function(json) {
 // 			console.log(json)
-			json.contentdiv=data.contentdiv
-			insertTemplate(json)
-			if(typeof(f)!="undefined")
-				window[f](json)
+			if(typeof(json.relogin)!="undefined") {
+				get_template("login",{},"loginready")
+			} else {
+				json.contentdiv=data.contentdiv
+				insertTemplate(json)
+				if(typeof(f)!="undefined")
+					window[f](json)
+			}
 		},
 		error: function( xhr, status, errorThrown ) {
 			alert( "Sorry, there was a problem!" );

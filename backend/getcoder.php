@@ -1,8 +1,9 @@
 <?php
 #checkpermissions()
-if(!$_SESSION["user_id"]) exit;
+session_start();
 $relative="../";
 include_once($relative."dirs.php");
+checkperm("projectadmin");
 include_once($shareddir."database.php");
 
 $res=array();

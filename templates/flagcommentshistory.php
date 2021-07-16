@@ -1,7 +1,6 @@
 <?php
 session_start();
-if(!$_SESSION["user_id"]) exit;
-else $user_id=$_SESSION["user_id"];
+checkperm();
 include_once($shareddir."database.php");
 
 $q="select comments,username,email from flags f left join users u on coder_id=user_id where coder_id=".$_SESSION[$_POST["flaghandling"]=="true"?"coder_id":"user_id"]." and response_id=".$_SESSION["response_id"];

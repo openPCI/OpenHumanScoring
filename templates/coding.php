@@ -1,8 +1,7 @@
 <?php
 // Tasks are defined in the tasktype-table. Twig-templates are used, so you can include variables and iterate over them.
 require_once $relative.'/vendor/autoload.php';
-if(!$_SESSION["user_id"]) exit;
-else $user_id=$_SESSION["user_id"];
+checkperm();
 include_once($shareddir."database.php");
 
 
